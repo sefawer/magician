@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Campaign;
 use App\Models\User;
 use App\Models\Product;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -47,6 +48,90 @@ class DatabaseSeeder extends Seeder
             'code' => 2530,
             'price' => 1163.5,
             'image_url' => 'https://hommcdn.com/upload/urunler/1734091875Dz17u.jpeg'
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Ocak',
+            'month' => 1,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Şubat',
+            'month' => 2,
+            'products' => '3',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Mart',
+            'month' => 3,
+            'products' => '2',
+            'min_order_cost' => 1999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Nisan',
+            'month' => 4,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Mayıs',
+            'month' => 5,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Haziran',
+            'month' => 6,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Temmuz',
+            'month' => 7,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Ağustos',
+            'month' => 8,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Eylül',
+            'month' => 9,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Ekim',
+            'month' => 10,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Kasım',
+            'month' => 11,
+            'products' => '4',
+            'min_order_cost' => 999.9
+        ]);
+
+        Campaign::create([
+            'name' => 'Hoşgeldin Aralık',
+            'month' => 12,
+            'products' => '4,3',
+            'min_order_cost' => 3999.9
         ]);
     }
 }

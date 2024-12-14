@@ -29,7 +29,8 @@ class Campaign extends Model
      */
     public function getProductsAttribute($value)
     {
-        return json_decode($value, true) ?? explode(',', $value);
+        $ids = explode(',', $value);
+        return Product::whereIn('id', $ids)->get();
     }
 
     /**

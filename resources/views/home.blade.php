@@ -34,7 +34,7 @@
               <td>{{ $product->name }}</td>
               <td>{{ $product->code }}</td>
               <td>
-                <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" width="50">
+                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" width="50">
               </td>
               <td>${{ number_format($product->price, 2) }}</td>
             </tr>
