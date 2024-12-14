@@ -25,6 +25,7 @@
               <th scope="col">Code</th>
               <th scope="col">Image</th>
               <th scope="col">Price</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -37,9 +38,114 @@
                 <img src="{{ $product->image_url }}" alt="{{ $product->name }}" width="50">
               </td>
               <td>${{ number_format($product->price, 2) }}</td>
+              <td><button onclick="addToBasket('{{ $product->id }}')">Sepete At</button></td>
             </tr>
             @endforeach
           </tbody>
         </table>
       </div>
+
+      <button id="myBasket" onclick="getBasket();" style="float:right;" data-bs-toggle="modal" data-bs-target="#basketModal">Sepetim({{$bpCount}})</button>
+
+      <div class="modal fade" id="basketModal" tabindex="-1" aria-labelledby="basketModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+              <!-- Modal Header -->
+              <div class="modal-header">
+                  <h5 class="modal-title" id="campaignName"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <!-- Modal Body -->
+              <div class="modal-body" id="basketContainer">
+                  
+              </div>
+              <!-- Modal Footer -->
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                  <button type="button" class="btn btn-primary" onclick="buy();">Satın Al</button>
+              </div>
+          </div>
+        </div>
+      </div>
+      <script>
+
+        function getBasket(){
+          fetch('/basket', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                
+                if (!response.ok) {
+                    throw new Error('Liste çekme başarısız');
+                }
+                return response.text();
+            })
+            .then(html => {
+              document.getElementById("basketContainer").innerHTML = html;
+            }).catch(error => {
+                console.error('Hata:', error.message);
+            });
+        }
+
+        function addToBasket(product_id) {
+          fetch('/basket/' + product_id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                
+                if (!response.ok) {
+                    throw new Error('Güncelleme başarısız');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                updateBasketButton(data.count);
+            })
+            .catch(error => {
+                console.error('Hata:', error.message);
+            });
+        }
+
+        function updateBasketButton(count) {
+          document.getElementById("myBasket").innerHTML='Sepetim('+count+')';
+        }
+
+        function removeFromBasket(productId) {
+            fetch('/basket/remove/' + productId, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, // CSRF token
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Silme işlemi başarısız oldu.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Satırı tablodan kaldır
+                    updateBasketButton(document.querySelectorAll('.product-row').length-1);
+                    getBasket();
+                    alert('Ürün sepetten kaldırıldı!');
+                } else {
+                    alert('Silme işlemi sırasında bir hata oluştu.');
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error.message);
+            });
+        }
+      </script>
 @endsection
