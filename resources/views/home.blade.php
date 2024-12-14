@@ -140,8 +140,7 @@
                 return response.json();
             })
             .then(data => {
-                console.log(data);
-                updateBasketButton(data.count);
+              updateBasketButton(data.count);
             })
             .catch(error => {
                 console.error('Hata:', error.message);

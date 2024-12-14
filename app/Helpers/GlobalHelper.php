@@ -50,14 +50,13 @@ function getPeriodOfValidCampaign()
     $user=Auth::user();
     $monthLen=calculateDifference($user->created_at);
     $dateAr=explode("-",$user->created_at);
-    if($monthLen==0 && checkUsedCampaigns($user->id, $dateAr[1])) {
-        
+    if($monthLen==0 && checkMonthlyOrders($user->id)) {
         return $dateAr[1];
     }
-    elseif($monthLen==1 && checkUsedCampaigns($user->id, $dateAr[1]) && checkUsedCampaigns($user->id,($dateAr[1]%12)+1)) {
+    elseif($monthLen==1 && checkUsedCampaigns($user->id, $dateAr[1]) && checkMonthlyOrders($user->id)) {
         return ($dateAr[1]%12)+1;
     }
-    elseif($monthLen==2 && checkUsedCampaigns($user->id, $dateAr[1]) && checkUsedCampaigns($user->id,($dateAr[1]%12)+1) && checkUsedCampaigns($user->id, (($dateAr[1]+1)%12)+1)) {
+    elseif($monthLen==2 && checkUsedCampaigns($user->id, $dateAr[1]) && checkUsedCampaigns($user->id,($dateAr[1]%12)+1) && checkMonthlyOrders($user->id)) {
         return (($dateAr[1]+1)%12)+1;
     }
     else{
@@ -65,16 +64,22 @@ function getPeriodOfValidCampaign()
     }
 }
 
+function checkMonthlyOrders($userId){
+    return !Order::where('user_id', $userId)
+        ->whereMonth('created_at', Carbon::now()->month)
+        ->exists();
+}
+
 function checkUsedCampaigns($userId, $campaignId) {
     // Kullanıcının siparişlerini ve kampanyayı filtreleyin
     $orders = Order::where('user_id', $userId)
         ->where('active_campaign', $campaignId)
-        ->orWhereMonth('created_at', Carbon::now()->month)
         ->get();
 
     // Siparişlerin boş olup olmadığını kontrol edin
     return !$orders->isEmpty();
 }
+
 
 function calculateDifference($createdAt)
 {
