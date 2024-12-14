@@ -69,6 +69,39 @@
       </div>
       <script>
 
+        function buy() {
+          fetch('/order', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                
+                if (!response.ok) {
+                    throw new Error('Sipariş başarısız');
+                }
+                return response.json();
+            })
+            .then(data => {
+              let orderText="";
+              for(var i in data) {
+                if(data[i].campaign_id!=undefined) {
+                  orderText+="Kampanya Hediyesi:" + data[i].pid + "\n";
+                }
+                else {
+                  orderText+= "Satın Alınan Ürün:" +data[i].pid +"("+data[i].price+")\n";
+                }
+              }
+              alert(orderText);
+              updateBasketButton(0);
+              getBasket();
+            }).catch(error => {
+                console.error('Hata:', error.message);
+            });
+        }
+
         function getBasket(){
           fetch('/basket', {
                 method: 'GET',
