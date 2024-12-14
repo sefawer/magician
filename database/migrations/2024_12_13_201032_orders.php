@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('products');
+            $table->text('products');
             $table->float('total_cost');
             $table->unsignedInteger('active_campaign');
             $table->timestamps();
